@@ -4,7 +4,6 @@
 # ------------------------------------------------------------------------------
 
 import math
-import warnings
 
 import cv2
 import numpy as np
@@ -127,14 +126,9 @@ def flip_back(output_flipped, flip_pairs, target_type='GaussianHeatmap'):
     """
     assert output_flipped.ndim == 4, \
         'output_flipped should be [batch_size, num_keypoints, height, width]'
-    if target_type == 'GaussianHeatMap':
-        warnings.warn('"GaussianHeatMap" is deprecated. '
-                      'Please use "GaussianHeatmap".')
-        target_type = 'GaussianHeatmap'
-    assert target_type in ('GaussianHeatmap', 'CombinedTarget')
     shape_ori = output_flipped.shape
     channels = 1
-    if target_type == 'CombinedTarget':
+    if target_type.lower() == 'CombinedTarget'.lower():
         channels = 3
         output_flipped[:, 1::3, ...] = -output_flipped[:, 1::3, ...]
     output_flipped = output_flipped.reshape(shape_ori[0], -1, channels,
